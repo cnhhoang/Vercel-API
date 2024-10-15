@@ -17,7 +17,7 @@ async function connectToDatabase(uri) {
 
 module.exports = async (req, res) => {
   // Handle CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'https://cnhhoang.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
