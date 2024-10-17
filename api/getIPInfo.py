@@ -6,7 +6,11 @@ def handler(request):
     if request.method != 'GET':
         return {
             'statusCode': 405,
-            'body': json.dumps({'message': 'Method not allowed'})
+            'body': json.dumps({'message': 'Method not allowed'}),
+            'headers': {
+                'Access-Control-Allow-Origin': '*',  # Allow all origins
+                'Content-Type': 'application/json'
+            }
         }
 
     # Get IP from query parameters
@@ -20,11 +24,19 @@ def handler(request):
         data = response.json()  # Parse JSON data
         return {
             'statusCode': 200,
-            'body': json.dumps(data)  # Return data as JSON
+            'body': json.dumps(data),  # Return data as JSON
+            'headers': {
+                'Access-Control-Allow-Origin': '*',  # Allow all origins
+                'Content-Type': 'application/json'
+            }
         }
     except requests.RequestException as error:
         print('Error:', error)
         return {
             'statusCode': 500,
-            'body': json.dumps({'message': 'Internal server error'})
+            'body': json.dumps({'message': 'Internal server error'}),
+            'headers': {
+                'Access-Control-Allow-Origin': '*',  # Allow all origins
+                'Content-Type': 'application/json'
+            }
         }
