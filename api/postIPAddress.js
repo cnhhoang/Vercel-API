@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri, {
@@ -6,8 +6,7 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
-
-// ====================================================================================================
+// Function to connect to MongoDB
 async function connectToMongo() {
   if (!client.isConnected()) {
     await client.connect();
@@ -15,14 +14,21 @@ async function connectToMongo() {
   return client.db("webpage").collection("ip");
 }
 
-//****************************************************************************************************
+// API handler
 export default async function handler(req, res) {
+  // Handle CORS
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins (for development purposes)
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Handle preflight request
+  if (req.method === "OPTIONS") {
+    res.status(200).end(); // Respond with 200 OK for preflight requests
+    return;
+  }
+
   if (req.method === "POST") {
     const visitorData = req.body;
-    // Handle CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     try {
       const collection = await connectToMongo();
