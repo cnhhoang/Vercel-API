@@ -25,8 +25,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'IP parameter is required' });
     }
 
-    const apiToken = 'f0b8fb50fc925f';
-    const APIEndpoint = `http://ipinfo.io/?callback=callback&token=f0b8fb50fc925f`;
+    const apiToken = process.env.IPINFO_TOKEN;
+    const APIEndpoint = `http://ipinfo.io/?callback=callback&token=` + apiToken;
 
     try {
         const response = await axios.get(APIEndpoint);

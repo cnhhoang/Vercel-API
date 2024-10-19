@@ -1,16 +1,15 @@
 import { MongoClient, ObjectId } from "mongodb";
 
 // ====================================================================================================
-const DATABASE = "webpage";
 const COLLECTION = "info";
 
 // --------------------------
-async function connectToCollection(uri) {
-    const client = await MongoClient.connect(uri, {
+async function connectToCollection() {
+    const client = await MongoClient.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
-    const db = client.db(DATABASE);
+    const db = client.db(process.env.DATABASE);
     const collection = db.collection(COLLECTION);
     return collection;
 }
@@ -19,7 +18,7 @@ async function connectToCollection(uri) {
 // API handler function
 export default async function handler(req, res) {
     // CORS
-    res.setHeader("Access-Control-Allow-Origin", "https://cnhhoang.github.io");
+    res.setHeader("Access-Control-Allow-Origin", process.env.ACCESS_CONTROL_ALLOW_ORIGIN);
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
@@ -37,7 +36,7 @@ export default async function handler(req, res) {
         }
 
         try {
-            const collection = await connectToCollection(process.env.MONGODB_URI);
+            const collection = await connectToCollection();
 
             // Update document by pushing 'route' into the 'history' array
             const result = await collection.updateOne(
