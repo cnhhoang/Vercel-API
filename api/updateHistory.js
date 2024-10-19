@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
         try {
             const db = await connectToDatabase(process.env.MONGODB_URI);
-            const collection = db.collection('info');
+            const collection = db.collection('ip');
 
             // Update document by pushing 'route' into the 'history' array
             const result = await collection.updateOne(
