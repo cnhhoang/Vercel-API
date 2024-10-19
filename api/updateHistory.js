@@ -18,18 +18,18 @@ async function connectToCollection(uri) {
 //****************************************************************************************************
 // API handler function
 export default async function handler(req, res) {
-    // Handle CORS
+    // CORS
     res.setHeader("Access-Control-Allow-Origin", "https://cnhhoang.github.io");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    // Handle preflight request
+    // preflight request
     if (req.method === "OPTIONS") {
         res.status(200).end();
         return;
     }
 
-    // Handle POST request to update MongoDB 'history' array
+    // POST request to update history
     if (req.method === "POST") {
         const { id, route } = req.body;
         if (!id || !route) {

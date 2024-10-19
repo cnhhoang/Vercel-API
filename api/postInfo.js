@@ -1,37 +1,41 @@
 import { MongoClient } from "mongodb";
 
 // ====================================================================================================
-async function connectToDatabase(uri) {
+const DATABASE = "webpage";
+const COLLECTION = "info";
+
+// --------------------------
+async function connectToCollection(uri) {
     const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
-    const db = client.db('webpage');
-    return db;
+    const db = client.db(DATABASE);
+    const collection = db.collection(COLLECTION);
+    return collection;
 }
 
 //****************************************************************************************************
 // API handler function
 export default async function handler(req, res) {
-    // Handle CORS
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    // CORS
+    res.setHeader("Access-Control-Allow-Origin", "https://cnhhoang.github.io");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    // Handle preflight request
+    // preflight request
     if (req.method === "OPTIONS") {
         res.status(200).end();
         return;
     }
 
-    // Handle POST request to MongoDB
+    // POST request to create session
     if (req.method === "POST") {
         const visitorData = req.body;
         console.log("Received visitor data:", visitorData);
 
         try {   // Try connecting to MongoDB
-            const db = await connectToDatabase(process.env.MONGODB_URI);
-            const collection = db.collection('info');
+            const collection = await connectToCollection(process.env.MONGODB_URI);
             const result = await collection.insertOne(visitorData);
             res.status(200).json({ success: true, message: "Data added to MongoDB", result });
         } 
