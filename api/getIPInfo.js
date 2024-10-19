@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'IP parameter is required' });
     }
 
-    const apiToken = 'f0b8fb50fc925f'; // Replace with your actual token
+    const apiToken = 'f0b8fb50fc925f';
     const APIEndpoint = `http://ipinfo.io/?callback=callback&token=f0b8fb50fc925f`;
 
     try {

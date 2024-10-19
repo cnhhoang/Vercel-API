@@ -31,9 +31,9 @@ export default async function handler(req, res) {
 
     // POST request to update history
     if (req.method === "POST") {
-        const { id, route } = req.body;
-        if (!id || !route) {
-            return res.status(400).json({ success: false, message: "id and route are required" });
+        const { time, id, route } = req.body;
+        if (!time || !id || !route) {
+            return res.status(400).json({ success: false, message: "Missing parameters!" });
         }
 
         try {
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
             // Update document by pushing 'route' into the 'history' array
             const result = await collection.updateOne(
                 { _id: new ObjectId(id) },
-                { $push: { history: route } } 
+                { $push: { history: route, time: time } } 
             );
 
             if (result.matchedCount === 0) {
