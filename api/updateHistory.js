@@ -42,7 +42,7 @@ export default async function handler(req, res) {
             // Update document by pushing 'route' into the 'history' array
             const result = await collection.updateOne(
                 { _id: new ObjectId(id) },
-                { $push: { history: route, time: time } } 
+                { $push: { history: {route: route, time: time}} } 
             );
 
             if (result.matchedCount === 0) {
