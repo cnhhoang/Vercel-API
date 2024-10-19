@@ -1,20 +1,25 @@
 import { MongoClient, ObjectId } from "mongodb";
 
 // ====================================================================================================
-async function connectToDatabase(uri) {
+const DATABASE = "webpage";
+const COLLECTION = "info";
+
+// --------------------------
+async function connectToCollection(uri) {
     const client = await MongoClient.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
-    const db = client.db('webpage');
-    return db;
+    const db = client.db(DATABASE);
+    const collection = db.collection(COLLECTION);
+    return collection;
 }
 
 //****************************************************************************************************
 // API handler function
 export default async function handler(req, res) {
     // Handle CORS
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", "https://cnhhoang.github.io");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
@@ -32,13 +37,12 @@ export default async function handler(req, res) {
         }
 
         try {
-            const db = await connectToDatabase(process.env.MONGODB_URI);
-            const collection = db.collection('ip');
+            const collection = await connectToCollection(process.env.MONGODB_URI);
 
             // Update document by pushing 'route' into the 'history' array
             const result = await collection.updateOne(
-                { _id: new ObjectId(id) }, // Filter by the document's id
-                { $push: { history: route } } // Push new route to history array
+                { _id: new ObjectId(id) },
+                { $push: { history: route } } 
             );
 
             if (result.matchedCount === 0) {
