@@ -33,6 +33,6 @@ module.exports = async (req, res) => {
         const data = await collection.find({}).toArray();
         res.status(200).json(data);
     } catch (error) {
-        res.status(500).json({ error: 'Unable to fetch data' });
+        res.status(500).json({ error: {error} });
     }
 };
