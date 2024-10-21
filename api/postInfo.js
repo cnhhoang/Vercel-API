@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-import userAgentParser from "user-agent-parser";
 
 // ====================================================================================================
 const DATABASE = process.env.DATABASE;
@@ -42,16 +41,12 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         const visitorData = req.body;
         const userAgent = req.headers['user-agent'];
-        const parsedUA = userAgentParser(userAgent);
+        const referrer = req.headers.referer || 'No referrer';
         const augmentedData = {
             ...visitorData,
             userAgent: userAgent,
-            browser: parsedUA.browser.name,     // Browser name
-            browserVersion: parsedUA.browser.version, // Browser version
-            os: parsedUA.os.name,               // Operating system name
-            osVersion: parsedUA.os.version,     // Operating system version
-            deviceType: parsedUA.device.type,   // Device type (mobile, tablet, etc.)
-            time: new Date().toISOString()      // Timestamp
+            referrer: referrer,
+            time: new Date().toISOString()
         };        
 
         try {   // Try connecting to MongoDB
