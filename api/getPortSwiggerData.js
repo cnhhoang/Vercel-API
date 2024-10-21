@@ -2,6 +2,8 @@ import { MongoClient } from 'mongodb';
 
 // ====================================================================================================
 let cachedDb = null;
+// const DATABASE = process.env.DATABASE;
+const DATABASE = "webpage";
 const COLLECTION = "portswigger-labs";
 // --------------------------
 async function connectToCollection() {
@@ -12,7 +14,7 @@ async function connectToCollection() {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
-    const db = client.db(process.env.DATABASE);
+    const db = client.db(DATABASE);
     cachedDb = db;
     const collection = db.collection(COLLECTION);
     return collection;
