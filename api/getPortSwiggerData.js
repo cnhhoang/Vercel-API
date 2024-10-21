@@ -1,23 +1,26 @@
 import { MongoClient } from 'mongodb';
 
 // ====================================================================================================
-let cachedDb = null;
-// const DATABASE = process.env.DATABASE;
-const DATABASE = "webpage";
+const DATABASE = process.env.DATABASE;
 const COLLECTION = "portswigger-labs";
+
+// --------------------------
+let cachedDb = null;
+let cachedClient = null;
+
 // --------------------------
 async function connectToCollection() {
-    if (cachedDb)
-        return cachedDb;
-    
-    const client = await MongoClient.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-    const db = client.db(DATABASE);
-    cachedDb = db;
-    const collection = db.collection(COLLECTION);
-    return collection;
+    if (cachedClient && cachedDb)
+        return cachedDb.collection(COLLECTION);
+
+    if (!cachedClient) {
+        cachedClient = await MongoClient.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+    }
+    cachedDb = cachedClient.db(DATABASE);
+    return cachedDb.collection(COLLECTION);
 }
 
 //****************************************************************************************************
