@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import userAgentParser from "user-agent-parser";
 
 // ====================================================================================================
 const DATABASE = process.env.DATABASE;
@@ -40,11 +41,22 @@ export default async function handler(req, res) {
     // POST request to create session
     if (req.method === "POST") {
         const visitorData = req.body;
-        console.log("Received visitor data:", visitorData);
+        const userAgent = req.headers['user-agent'];
+        const parsedUA = userAgentParser(userAgent);
+        const augmentedData = {
+            ...visitorData,
+            userAgent: userAgent,
+            browser: parsedUA.browser.name,     // Browser name
+            browserVersion: parsedUA.browser.version, // Browser version
+            os: parsedUA.os.name,               // Operating system name
+            osVersion: parsedUA.os.version,     // Operating system version
+            deviceType: parsedUA.device.type,   // Device type (mobile, tablet, etc.)
+            time: new Date().toISOString()      // Timestamp
+        };        
 
         try {   // Try connecting to MongoDB
             const collection = await connectToCollection();
-            const result = await collection.insertOne(visitorData);
+            const result = await collection.insertOne(augmentedData);
             res.status(200).json({ success: true, message: "Data added to MongoDB", result });
         } 
         catch (error) {
