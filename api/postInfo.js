@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 
 // ====================================================================================================
 const DATABASE = process.env.DATABASE;
-const COLLECTION = "info";
+const COLLECTION = process.env.COLLECTION_INFO;
 
 // --------------------------
 let cachedDb = null;
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         const visitorData = req.body;
         const userAgent = req.headers['user-agent'];
-        const referrer = req.headers.referer || 'No referrer';
+        const referrer = req.headers.referer === "https://cnhhoang.github.io/" ? '' : req.headers.referer || '';
         let ipInfo;
         try {
             const ipInfoResponse = await fetch(`https://ipinfo.io/${req.body.ip}?token=${process.env.IPINFO_TOKEN}`);

@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 // ====================================================================================================
 const DATABASE = process.env.DATABASE;
-const COLLECTION = "portswigger-labs";
+const COLLECTION = process.env.COLLECTION_PORTSWIGGER;
 
 // --------------------------
 let cachedDb = null;

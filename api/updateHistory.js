@@ -2,7 +2,7 @@ import { MongoClient, ObjectId } from "mongodb";
 
 // ====================================================================================================
 const DATABASE = process.env.DATABASE;
-const COLLECTION = "info";
+const COLLECTION = process.env.COLLECTION_INFO;
 
 // --------------------------
 let cachedDb = null;
