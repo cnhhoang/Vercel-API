@@ -42,10 +42,20 @@ export default async function handler(req, res) {
         const visitorData = req.body;
         const userAgent = req.headers['user-agent'];
         const referrer = req.headers.referer || 'No referrer';
+        let ipInfo;
+        try {
+            const ipInfoResponse = await fetch(`https://ipinfo.io/${req.body.ip}?token=${process.env.IPINFO_TOKEN}`);
+            ipInfo = await ipInfoResponse.json();
+        } catch (error) {
+            console.error("Error fetching IP info:", error);
+            res.status(500).json({ success: false, message: "Failed to fetch IP info", error });
+        }
+
         const augmentedData = {
             ...visitorData,
             userAgent: userAgent,
             referrer: referrer,
+            ipInfo: ipInfo,
             time: new Date().toISOString()
         };        
 
